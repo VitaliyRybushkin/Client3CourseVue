@@ -1,60 +1,58 @@
 <template>
   <div>
-  <h5>Это я</h5>
-    <div class="col" v-for="task in tasks" :key="task.index" style="width:600px">
+    <div class="col" v-for="task in this.sts" :key="task[2]" style="width:600px">
       <div class="card">
         <div class="card-body">
-          {{task.info}}
-          <input id=task.index class="input-group" />
-          <div v-if="task.answer===answ">
-            <p>Правильно</p>
-          </div>
+          <h2 style="font-size: smaller">Задание {{task[2]+1}}</h2>
+          {{task[0]}}
+          <input :id=task[2] class="input-group" hint="Ваш ответ"/>
         </div>
       </div>
     </div>
+    <h5></h5>
+    <button class="btn btn-primary btn-lg btn-block" type="submit" @click="check">Завершить</button>
   </div>
 </template>
 
 <script>
+import tasks from '../mocks/tasks'
 
 export default {
+  created () {
+    this.sts = tasks
+  },
   name: 'TaskArray',
   mounted () {
   },
   methods: {
     async check () {
-
+      var k = 0
+      var tmap = []
+      for (let i = 0; i < this.sts.length; i++) {
+        let task = this.sts[i]
+        let ans = task[1]
+        let el = document.getElementById(i).value
+        el = el.toLowerCase().trim()
+        document.getElementById(i).value = el
+        if (ans === el) {
+          k++
+        } else {
+          tmap.push(task[2] + 1)
+        }
+      }
+      console.log(tmap)
+      console.log('TMAP!!!!!!!!!!!!!!!!!!!!!!')
+      if (k === this.sts.length) {
+        alert('Молодец всё правильно')
+        this.$router.push({name: 'login'})
+      } else {
+        alert('Есть ошибки в следующих номерах: ' + (tmap))
+      }
     }
   },
-  data () {
-    return {
-      tasks: [{
-        info: 'Укажите все цифры, на месте которых пишется НН.\n' +
-          '\n' +
-          'Цифры укажите в порядке возрастания.\n' +
-          '\n' +
-          ' \n' +
-          '\n' +
-          '\n' +
-          'За око(1)ым стеклом жила своей утре(2)ей жизнью обыкнове(3)ая городская асфальтирова(4)ая улица, по которой мчались переполне(5)ые маршрутные такси и гружё(6)ые самосвалы.',
-        answer: '10'
-      },
-      {
-        info: 'В одном из выделенных ниже слов допущена ошибка в образовании формы слова. Исправьте ошибку и запишите слово правильно.' +
-        '\n' +
-        'в ДВЕ тысячи пятнадцатом году' +
-          '\n' +
-          'ПРИОБРЕТШИЙ опыт' +
-          '\n' +
-          'множество ПЛАТЬЕВ' +
-          '\n' +
-          'офицерских ПОГОН' +
-          '\n' +
-          'СТЕРЕГЁТ дом'
-      }]
-    }
+  data: function () {
+    return {stat: 'Неверно'}
   }
-
 }
 </script>
 
@@ -63,5 +61,13 @@ export default {
   margin-bottom: 23px;
   margin-top: 23px;
   text-align: left;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.card{
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
 }
 </style>

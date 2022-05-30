@@ -28,7 +28,7 @@
 
               <hr class="my-4">
 
-              <button class="btn btn-primary btn-lg btn-block" type="register">Зарегестрироваться</button>
+              <button class="btn btn-primary btn-lg btn-block" @click="reg" type="register">Зарегестрироваться</button>
 
             </div>
           </div>
@@ -40,21 +40,55 @@
 
 <script>
 
+import students from '../mocks/students'
+
 export default {
+  created () {
+    this.sts = students
+  },
+  data () {
+    return {}
+  },
   methods: {
     async gen () {
       var studlog = document.getElementById('login').value
       var studpass = document.getElementById('pass').value
-      if (studlog === 'admin' && studpass === '123') {
-        await this.$router.push({name: 'profile'})
+      if (studlog === 'admin' & studpass === 'teach123') {
+        await this.$router.push({name: 'teacher'})
       } else {
-        alert('Не правильно введены login/password')
+        console.log(studlog + ' ' + studpass)
+        console.log(this.sts)
+        var k = 0
+        var xe = 0
+        for (let i = 0; i < this.sts.length; i++) {
+          let student = this.sts[i]
+          console.log(student[0] + ' ' + student[1])
+          if (student[0] === studlog) {
+            if (student[1] === studpass) {
+              k = 1
+              xe = i
+            }
+          }
+        }
+        if (k === 1) {
+          await this.$router.push({name: 'profile', params: {id: xe}})
+        } else {
+          alert('Не правильно введены login/password')
+        }
       }
+    },
+    async reg () {
+      await this.$router.push({name: 'registration'})
     }
   },
   name: 'LoginPage',
   components: {
 
-  }
+  }/* ,
+  computed: {
+    students () {
+      return students
+    }
+  } */
 }
 </script>
